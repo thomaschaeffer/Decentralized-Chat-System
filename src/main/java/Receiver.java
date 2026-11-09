@@ -50,6 +50,7 @@ public class Receiver extends Thread {
             case "change_name":
                 System.out.println("change name");
                 this.activeList.ModifyNickName(address, content);
+                
                 break;
             default:
                 System.out.println("Packet with non matching flag: "+flag+" received from: "+address+" ("+content+")");

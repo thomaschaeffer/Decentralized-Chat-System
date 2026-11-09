@@ -25,7 +25,7 @@ public class Main {
             System.out.println(myList.GetTimestamp(IP));
         }
 
-        msgSender.sendUDP("", "change_name", "Thomas");
+        msgSender.sendUDP("", "change_name", "AHHHHHHHHHHHHHHHH");
 
 
                  i = 0;
