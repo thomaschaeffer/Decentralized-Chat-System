@@ -1,25 +1,60 @@
-package deconnexion;
+import java.io.IOException;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
-    public static void main(String[] args) throws InterruptedException{
-        ContactListImpl contactList = new ContactListImpl();
-        Disconnection d = new Disconnection(contactList);
-        d.start();
+    public static void main(String[] args) throws IOException{
+        String username = "10.1.5.14";
+        UserList test1 = new UserList();
+        
+        Thread receiver = new Receiver(test1);
+        receiver.start();
 
-        contactList.add("127.0.0.1", "Alice");                      // normally done by the connection phase
-        d.startHeartbeat("127.0.0.1", "Alice", 2_000);              // x = 2 s
+        Sender msgSender = new Sender(4445, 4444, 256);
 
-        Thread.sleep(10_000);
-        System.out.println("Should contain Alice: " + contactList.getContacts().keySet());
+        msgSender.sendUDP("", "connection", username);
+        
+        int i = 0;
+        while (i < 100000) {
+            i = i + 1;
+        }
 
-        d.stopHeartbeat();                                          // Alice "crashes"
-        Thread.sleep(9_000);
-        System.out.println("Should be empty: " + contactList.getContacts().keySet());
+        for (String IP: test1.GetIP()){
+            System.out.println(test1.GetName(IP));
+            System.out.println(test1.GetTimestamp(IP));
+        }
 
-        d.stopListening();
+        msgSender.sendUDP("", "change_name", "Thomas");
 
 
-    }
+                 i = 0;
+        while (i < 100000) {
+            i = i + 1;
+        }
+
+        for (String IP: test1.GetIP()){
+            System.out.println(test1.GetName(IP));
+        }
+
+        msgSender.sendUDP("", "update", "Thomas");
+
+         i = 0;
+        while (i < 100000) {
+            i = i + 1;
+        }
+
+        for (String IP: test1.GetIP()){
+            System.out.println(test1.GetName(IP));
+            System.out.println(test1.GetTimestamp(IP));
+        }
+
+        msgSender.sendUDP("", "deconnection", "Thomas");
+
+         i = 0;
+        while (i < 100000) {
+            i = i + 1;
+        }
+
+        for (String IP: test1.GetIP()){
+            System.out.println(test1.GetName(IP));
+        }
+    }     
 }

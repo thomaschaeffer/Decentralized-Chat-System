@@ -3,7 +3,13 @@ import java.net.*;
 
 
 public class Receiver extends Thread {
-    public boolean running = true;
+    private boolean running = true;
+    public UserList activeList;
+
+    public Receiver(UserList activeList) {
+        this.activeList = activeList;
+    }
+
     @Override
     public void run() {
         try {
@@ -31,15 +37,19 @@ public class Receiver extends Thread {
         switch(flag) {
             case "update":
                 System.out.println("update");
+                this.activeList.UpdateTimestamp(address);
                 break;
             case "connection":
                 System.out.println("connection");
+                this.activeList.Add(address, content, System.currentTimeMillis());
                 break;
             case "deconnection":
                 System.out.println("deconnection");
+                this.activeList.Remove(address);
                 break;
             case "change_name":
                 System.out.println("change name");
+                this.activeList.ModifyNickName(address, content);
                 break;
             default:
                 System.out.println("Packet with non matching flag: "+flag+" received from: "+address+" ("+content+")");
