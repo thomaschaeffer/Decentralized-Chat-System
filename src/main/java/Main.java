@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.lang.InterruptedException;
 
 public class Main {
     public static void main(String[] args) throws IOException{
@@ -59,5 +60,25 @@ public class Main {
         for (String IP: myList.GetIP()){
             System.out.println(myList.GetName(IP));
         }
-    }     
+
+        msgSender.sendUDP("", "connection", username);
+        msgSender.sendUDP("", "change_name", "MJ");
+                 i = 0;
+
+        while (i < 100000) {
+            i = i + 1;
+        }
+        for (String IP: myList.GetIP()){
+            System.out.println(myList.GetName(IP));
+        }
+        i = 0;
+        while (i < 10000000) {
+            i = i + 1;
+            //System.out.print(i);
+        }
+        System.out.println("supposement vide");
+        for (String IP: myList.GetIP()){
+            System.out.println(myList.GetName(IP));
+        }
+    }  
 }
