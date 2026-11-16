@@ -16,15 +16,17 @@ public class Sender {
 
     public void sendUDP(String strAdrDest, String flag, String content) throws IOException {
         InetAddress adrDest;
-        if (strAdrDest.isEmpty()) {
-            //adrDest = getBroadcast();
-            adrDest = InetAddress.getByName("255.255.255.255");
-        } else {
-            adrDest = InetAddress.getByName(strAdrDest);
-        }
+        // if (strAdrDest.isEmpty()) {
+        //     //adrDest = getBroadcast();
+        //     adrDest = InetAddress.getByName("255.255.255.255");
+        // } else {
+        //     adrDest = InetAddress.getByName(strAdrDest);
+        // }
+        adrDest = InetAddress.getByName("10.1.255.255");
         String data = String.join(",", Arrays.asList(flag, content));
         buff = data.getBytes();
         DatagramPacket outPacket = new DatagramPacket(buff, buff.length, adrDest, senderPort);
         socket.send(outPacket);
+        System.out.println("actually sent");
     }
 }

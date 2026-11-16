@@ -29,6 +29,7 @@ public class Receiver extends Thread {
     }
 
     private void handler(DatagramPacket received) {
+        System.out.println("handling a received package");
         String[] data = (new String(received.getData(), 0, received.getLength())).split(",");
         String flag = data[0];
         String content = data[1];
