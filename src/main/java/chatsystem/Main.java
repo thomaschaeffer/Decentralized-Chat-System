@@ -1,5 +1,6 @@
+package chatsystem;
+
 import java.io.IOException;
-import java.lang.InterruptedException;
 
 public class Main {
     public static void main(String[] args) throws IOException{
@@ -10,8 +11,9 @@ public class Main {
         receiver.start();
         Thread disconnection = new Disconnection(myList);
         disconnection.start();
-
         Sender msgSender = new Sender(4445, 4444, 256);
+        Thread sendUpdt = new SendUpdate(msgSender);
+        sendUpdt.start();
 
         msgSender.sendUDP("", "connection", username);
         

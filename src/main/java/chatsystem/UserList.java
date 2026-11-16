@@ -1,10 +1,12 @@
+package chatsystem;
+
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.Set;
 
-class UserList {
+public class UserList {
 
-    private Map<String,CustomTuple<String,Long>> userlist;
+    private Map<String, CustomTuple<String,Long>> userlist;
     public UserList(){
         this.userlist = new Hashtable<>();
     }

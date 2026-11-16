@@ -1,3 +1,5 @@
+package chatsystem;
+
 import java.lang.InterruptedException;
 
 public class Disconnection extends Thread {

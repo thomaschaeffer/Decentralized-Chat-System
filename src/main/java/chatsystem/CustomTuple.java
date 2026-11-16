@@ -1,3 +1,5 @@
+package chatsystem;
+
 public class CustomTuple<A, B> {
    private A first;
    private B second;
