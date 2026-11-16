@@ -22,11 +22,9 @@ public class Application {
         System.out.println("Discovery!");
         try {
             msgSender.sendUDP("", "connection", "Thomas");
-            System.out.println("sending");
         } catch (IOException e) {
             return 1;
         } 
-        
         return 0;
     }
 
@@ -64,8 +62,9 @@ public class Application {
 
     public void start() throws IOException {
         // Here goes everything automatic before terminal is launched and takes execution flow
+
         receiver.start();
-        disconnection.start();
+        //disconnection.start();
         terminal.start();
     } 
 }   
