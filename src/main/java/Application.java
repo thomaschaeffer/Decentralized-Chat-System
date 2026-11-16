@@ -18,8 +18,8 @@ public class Application {
         terminal = new Terminal(this);
     } 
 
-    public int sendDiscovery() {
-        System.out.println("Discovery!");
+    public int test_connection() {
+        System.out.println("sent fake connection message");
         try {
             msgSender.sendUDP("", "connection", "Thomas");
         } catch (IOException e) {
@@ -28,8 +28,8 @@ public class Application {
         return 0;
     }
 
-    public int sendFake() {
-        System.out.println("Sent fake connection ping from simulated user!");
+    public int test_update() {
+        System.out.println("Sent fake connection ping from simulated user");
         try {
             msgSender.sendUDP("", "update", "Thomas");
         } catch (IOException e) {

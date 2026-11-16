@@ -11,7 +11,7 @@ public class Terminal {
 
     private String checkArgs(int len, int expected, String cmd) {
         if (len != expected) {
-            return "Error: "+cmd+" expects "+expected+"arguments, but "+len+" was given.";
+            return "Error: "+cmd+" expects "+expected+" arguments, but "+len+" was given.";
         } 
         return "";
     } 
@@ -36,13 +36,13 @@ public class Terminal {
                 // Maybe possible to do help cmd to have specific on cmd
                 System.out.println("(WIP) Here is all commands:");
                 break;
-            case "test_discovery":
-                if (this.app.sendDiscovery() != 0) {
+            case "test_connection":
+                if (this.app.test_connection() != 0) {
                     System.out.println("Error: UDP Broadcast failed");
                 }
                 break;
-            case "test_sendfake":
-                if (this.app.sendFake() != 0) {
+            case "test_update":
+                if (this.app.test_update() != 0) {
                     System.out.println("Error: UDP Broadcast failed");
                 }
                 break;
@@ -83,7 +83,7 @@ public class Terminal {
                 running = false;
                 break;                
             } 
-
+            
             executeCmd(command);
         }  
     } 
