@@ -14,7 +14,7 @@ public class Sender {
         this.buff = new byte[buffLen];
     }
 
-    public void sendUDP(String strAdrDest, String flag, String content) throws IOException {
+    private void sendUDP(String strAdrDest, String flag, String content) throws IOException {
         InetAddress adrDest;
         if (strAdrDest.isEmpty()) {
             //adrDest = getBroadcast();
@@ -26,5 +26,21 @@ public class Sender {
         buff = data.getBytes();
         DatagramPacket outPacket = new DatagramPacket(buff, buff.length, adrDest, senderPort);
         socket.send(outPacket);
+    }
+
+    public void sendBroadcastConnexion() throws IOException{
+        sendUDP("", "connection", "");
+    }
+
+    public void sendBroadcastUpdate() throws IOException{
+        sendUDP("", "update", "");
+    }
+
+    public void sendBroadcastDeconnexion() throws IOException{
+        sendUDP("", "deconnection", "");
+    }
+
+    public void sendBroadcastName(String name) throws IOException{
+        sendUDP("", "change_name", name);
     }
 }
