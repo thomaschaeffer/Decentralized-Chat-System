@@ -28,13 +28,12 @@ public class Terminal {
         String errorArgs;
 
         switch (command) {
-            case "hello":
-                System.out.println("Hello!");
-                break;
             case "help":
                 // Function in this class listing all commands with descriptions?
                 // Maybe possible to do help cmd to have specific on cmd
-                System.out.println("(WIP) Here is all commands:");
+                System.out.println("(WIP) Here is all commands: ");
+                System.out.println("test_connection # Broadcasts a ping to simulate connection behaviour\ntest_update # Broadcasts a signal to simulate a periodic 'sign of life' signal\nchange_username\nlist_active\n");
+                System.out.println("Commands starting with 'test_' serves as manual tests for behaviour ment to be automatic in final implementation");
                 break;
             case "test_connection":
                 if (this.app.test_connection() != 0) {
