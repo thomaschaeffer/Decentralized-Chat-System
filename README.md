@@ -15,6 +15,7 @@ The goal of this project is to create a chat application where users can find ea
 ### 1. Peer Discovery
 
 When a user starts the connection:
+
     * The application sends a UDP broadcast message to announce that the user has joined the network.
 
     * Other users receive this message and add this new IP in their contact list.
