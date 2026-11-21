@@ -14,9 +14,9 @@ public class Application {
         username = "10.1.5.14";
         myList = new UserList();
         receiver = new Receiver(myList);
-        sendUpdate = newSendUpdate();
         disconnection = new Disconnection(myList);
         msgSender = new Sender(4445, 4444, 256);
+        sendUpdate = new SendUpdate(msgSender);
         terminal = new Terminal(this);
     } 
 
