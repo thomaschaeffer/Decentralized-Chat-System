@@ -44,7 +44,6 @@ public class ContactDiscoveryTest {
             assertEquals("here", myList.GetName(IP));
         }
 
-        long time = System.currentTimeMillis() ;
         msgSender.sendBroadcastUpdate();
         Thread.sleep(1000);
         for (String IP: myList.GetIP()){
