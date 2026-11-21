@@ -16,22 +16,22 @@ The goal of this project is to create a chat application where users can find ea
 
 When a user starts the connection:
 
-    * The application sends a UDP broadcast message to announce that the user has joined the network.
+* The application sends a UDP broadcast message to announce that the user has joined the network.
 
-    * Other users receive this message and add this new IP in their contact list.
+* Other users receive this message and add this new IP in their contact list.
 
-    * Each user sends back a response with their username.
+* Each user sends back a response with their username.
 
-    * The initial user contact list is automatically created and updated.
+* The initial user contact list is automatically created and updated.
 
 
 ### 2. Username Management
 
-    * Each user has a username.
+* Each user has a username.
 
-    * Users can change their username while the application is running
+* Users can change their username while the application is running
 
-    * If the new username is not in our contact list, the username is sent to other users and they will update their contact list.
+* If the new username is not in our contact list, the username is sent to other users and they will update their contact list.
 
 
 ### 3. Connection Management
@@ -40,15 +40,15 @@ The application can detect both normal and unexpected disconnections.
 
 #### Normal disconnection: 
 
-    * When a user leaves the application, a UDP message is sent to the other users. When they receive this message their remove the user from their contact list.
+* When a user leaves the application, a UDP message is sent to the other users. When they receive this message their remove the user from their contact list.
 
 #### Unexpected disconnection: 
 
-    * Each user regularly sends a UDP message to show that they are still conected.
+* Each user regularly sends a UDP message to show that they are still conected.
 
-    * Each user checks the last time since they receive a message from every contact.
+* Each user checks the last time since they receive a message from every contact.
 
-    * If it's been too long since the last update message the contact is considered disconnect and he is deleted from the contact list.
+* If it's been too long since the last update message the contact is considered disconnect and he is deleted from the contact list.
 
 
 ## Terminal Commands 
