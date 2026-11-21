@@ -2,7 +2,7 @@ import java.lang.InterruptedException;
 
 public class Disconnection extends Thread {
 
-    private long timeLimite= 1000;
+    private long timeLimite= 10000;
     public UserList activeList;
 
     public Disconnection(UserList activeList) {
