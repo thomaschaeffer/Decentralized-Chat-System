@@ -6,7 +6,7 @@ import java.util.Set;
  * Each user is identified by their IP address and associated
  * with their nickname and last activity timestamp.
  */
-public class UserList {
+class UserList {
 
     /**
      * Stores user using their IP adress as the key.
