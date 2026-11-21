@@ -1,3 +1,5 @@
+package chatsystem;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.IOException;
@@ -20,7 +22,7 @@ public class Terminal {
         // Case switch on different commands with default fallback
         // Maybe more advanced command handling with arguments and more generalised error handling!
         // Store all possible commands with desc in dict? or other form?
-        // Executes app.function defined in Application class so that Terminal knows nothing outside Application
+        // Executes app.function defined in chatsystem.Application class so that chatsystem.Terminal knows nothing outside chatsystem.Application
         String[] parts = input.split(" ");
         String command = parts[0]; 
         String[] args = Arrays.copyOfRange(parts, 1, parts.length);
@@ -69,7 +71,7 @@ public class Terminal {
     }  
 
     public void start() throws IOException {
-        // Main while loop responding to user commands
+        // chatsystem.Main while loop responding to user commands
         boolean running = true;
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 

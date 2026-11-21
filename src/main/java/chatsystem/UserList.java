@@ -1,12 +1,14 @@
+package chatsystem;
+
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.Set;
-/** 
+/**
  * Manages the list of users currently connected to the network.
  * Each user is identified by their IP address and associated
  * with their nickname and last activity timestamp.
  */
-class UserList {
+public class UserList {
 
     /**
      * Stores user using their IP adress as the key.
@@ -22,7 +24,7 @@ class UserList {
 
     /**
      * Adds a new user to the list
-     * 
+     *
      * @param ip        User's ip
      * @param nickname  user's nickname
      * @param time      user's last activity timestamp
@@ -34,7 +36,7 @@ class UserList {
     
     /**
      * Removes a user from the list using their IP adress.
-     * 
+     *
      * @param ip        User's ip
      */
     public void Remove(String ip){
@@ -43,7 +45,7 @@ class UserList {
 
     /**
      * Checks if the nickname is already used by another user.
-     * 
+     *
      * @param nickname  the nickname we are searching for
      * @return          true if the nickname is already present, false otherwise
      */
@@ -58,7 +60,7 @@ class UserList {
 
     /**
      * Modify the nickname associated with a given IP address
-     * 
+     *
      * @param ip        User's IP address
      * @param nickname  The new nickname
      */
@@ -69,7 +71,7 @@ class UserList {
 
     /**
      * Updates the last activity timestamp of a user
-     * 
+     *
      * @param ip User's IP address
      */
     public void UpdateTimestamp(String ip) {
@@ -78,7 +80,7 @@ class UserList {
 
     /**
      * Return the nickname associated with the given IP address
-     * 
+     *
      * @param ip    the IP address of the user
      * @return      the user's nickname
      */
@@ -88,7 +90,7 @@ class UserList {
 
     /**
      * Returns the IP addresses of all users in the user's list
-     * 
+     *
      * @return  A set containing all user IP addresses
      */
     public Set<String> GetIP(){
@@ -97,7 +99,7 @@ class UserList {
     
     /**
      * Returns the last activity timestamp of a user
-     * 
+     *
      * @param ip    the user's IP addresse
      * @return      the last activity timestamp
      */
@@ -107,7 +109,7 @@ class UserList {
 
     /**
      * checks wether a user is known by their IP address
-     * 
+     *
      * @param ip    The IP address we are searching for
      * @return      true if the IP address exists in the list, false otherwise
      */

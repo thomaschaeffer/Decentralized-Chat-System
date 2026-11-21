@@ -51,7 +51,7 @@ The application can detect both normal and unexpected disconnections.
 * If it's been too long since the last update message the contact is considered disconnect and he is deleted from the contact list.
 
 
-## Terminal Commands 
+## chatsystem.Terminal Commands 
 
 The application provides a terminal interface to interact with the chat system.
 

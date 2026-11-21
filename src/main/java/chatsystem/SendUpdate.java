@@ -1,5 +1,4 @@
-import java.io.IOException;
-import java.lang.InterruptedException;
+package chatsystem;
 
 public class SendUpdate extends Thread{
     private long timeline = 1000;
