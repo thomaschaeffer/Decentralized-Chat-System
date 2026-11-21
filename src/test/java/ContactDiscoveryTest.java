@@ -31,13 +31,13 @@ public class ContactDiscoveryTest {
         Thread.sleep(1000);
         Sender msgSender = new Sender(senderPort, socketPort, 256);
 
-        msgSender.sendUDP("", "connection", "10.1.5.14");
+        msgSender.sendBroadcastConnexion();
         Thread.sleep(1000);
 
         for (String IP: myList.GetIP()){
             assertEquals("10.1.5.14", myList.GetName(IP));
         }
-        msgSender.sendUDP("", "change_name", "here");
+        msgSender.sendBroadcastName("here");
 
         Thread.sleep(1000);
         for (String IP: myList.GetIP()){
@@ -45,12 +45,12 @@ public class ContactDiscoveryTest {
         }
 
         long time = System.currentTimeMillis() ;
-        msgSender.sendUDP("", "update", "here");
+        msgSender.sendBroadcastUpdate();
         Thread.sleep(1000);
         for (String IP: myList.GetIP()){
             assertEquals("here", myList.GetName(IP));
         }
-        msgSender.sendUDP("", "deconnection", "Thomas");
+        msgSender.sendBroadcastDeconnexion();
         Thread.sleep(1000);
         for (String IP: myList.GetIP()){
             assertEquals("",myList.GetName(IP));
@@ -65,7 +65,7 @@ public class ContactDiscoveryTest {
         receiver.start();
         Thread.sleep(1000);
         Sender msgSender = new Sender(senderPort, socketPort, 256);
-        msgSender.sendUDP("", "connection", "10.1.5.14");
+        msgSender.sendBroadcastConnexion();
 
         long time1 = 0;
         for (String IP: myList.GetIP()){
@@ -92,7 +92,7 @@ public class ContactDiscoveryTest {
         Disconnection disconnection = new Disconnection(myList);
         disconnection.start();
         Sender msgSender = new Sender(senderPort, socketPort, 256);
-        msgSender.sendUDP("", "connection", "10.1.5.14");
+        msgSender.sendBroadcastConnexion();
 
         Thread.sleep(2000);
         for (String IP: myList.GetIP()){
