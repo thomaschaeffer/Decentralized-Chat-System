@@ -21,7 +21,7 @@ public class Application {
     public int test_connection() {
         System.out.println("sent fake connection message");
         try {
-            msgSender.sendUDP("", "connection", "Thomas");
+            msgSender.sendBroadcastConnexion();
         } catch (IOException e) {
             return 1;
         } 
@@ -31,7 +31,7 @@ public class Application {
     public int test_update() {
         System.out.println("Sent fake connection ping from simulated user");
         try {
-            msgSender.sendUDP("", "update", "Thomas");
+            msgSender.sendBroadcastUpdate();
         } catch (IOException e) {
             return 1;
         } 
@@ -44,7 +44,7 @@ public class Application {
         if (!myList.IsPresent(name)) {
             username = name;
             try {
-                msgSender.sendUDP("", "change_name", username);
+                msgSender.sendBroadcastName(username);
             } catch (IOException e) {
                 return 1;
             } 
