@@ -6,6 +6,7 @@ public class Application {
     public UserList myList;
     private Thread receiver;
     private Thread disconnection;
+    private Thread sendUpdate;
     private Sender msgSender;
     private Terminal terminal;
 
@@ -13,6 +14,7 @@ public class Application {
         username = "10.1.5.14";
         myList = new UserList();
         receiver = new Receiver(myList);
+        sendUpdate = newSendUpdate();
         disconnection = new Disconnection(myList);
         msgSender = new Sender(4445, 4444, 256);
         terminal = new Terminal(this);
@@ -64,7 +66,8 @@ public class Application {
         // Here goes everything automatic before terminal is launched and takes execution flow
 
         receiver.start();
-        //disconnection.start();
+        sendUpdate.start();
+        disconnection.start();
         terminal.start();
     } 
 }   
