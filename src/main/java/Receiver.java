@@ -38,11 +38,19 @@ public class Receiver extends Thread {
         switch(flag) {
             case "update":
                 System.out.println("update");
-                this.activeList.UpdateTimestamp(address);
+                if ( this.activeList.IsKnow(address)){
+                    this.activeList.UpdateTimestamp(address);
+                } else {
+                    this.activeList.Add(address,"",System.currentTimeMillis());
+                }
                 break;
             case "connection":
                 System.out.println("connection");
-                this.activeList.Add(address, content, System.currentTimeMillis());
+                if ( this.activeList.IsKnow(address)){
+                    this.activeList.UpdateTimestamp(address);
+                } else {
+                    this.activeList.Add(address,"",System.currentTimeMillis());
+                }                
                 break;
             case "deconnection":
                 System.out.println("deconnection");

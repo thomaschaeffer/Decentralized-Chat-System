@@ -46,5 +46,9 @@ class UserList {
     public long GetTimestamp(String ip){
         return  this.userlist.get(ip).getSecond();
     }
+
+    public boolean IsKnow(String ip){
+        return this.userlist.containsKey(ip);
+    }
 }
 
