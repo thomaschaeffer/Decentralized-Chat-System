@@ -11,7 +11,7 @@ public class SendUpdate extends Thread{
         while(true){
             try{
                 sleep(timeline);
-                sender.sendUDP("", "update", "Thomas");
+                sender.sendBroadcastUpdate();
             }catch (Exception i) {
                 System.out.println(i);
             }
