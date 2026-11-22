@@ -29,7 +29,7 @@ public class ContactDiscoveryTest {
         } finally {
             receiver.terminate();
         }
-        receiver.join(2000);
+        receiver.join(100);
         assertFalse(receiver.isAlive(), "The Receiver thread should stop after terminate()");
     }
 
@@ -45,12 +45,12 @@ public class ContactDiscoveryTest {
         try{
             receiver.setDaemon(true);
             receiver.start();
-            Thread.sleep(1000);
+            Thread.sleep(100);
             msgSender = new Sender(senderPort, socketPort, 256);
 
             // Connection: the user is added, its nickname is its IP by default
             msgSender.sendBroadcastConnexion();
-            Thread.sleep(15000);
+            Thread.sleep(100);
             assertEquals(1, myList.GetIP().size(), "Expected exactly one user after the connection packet");
             for (String IP: myList.GetIP()){
                 assertEquals(IP, myList.GetName(IP), "The default nickname should be the IP address");
@@ -59,15 +59,15 @@ public class ContactDiscoveryTest {
 
             // Name change: the nickname is modified
             msgSender.sendBroadcastName("here");
+            Thread.sleep(100);
             assertEquals(1, myList.GetIP().size(), "The name change should not add a new user");
-            Thread.sleep(1000);
             for (String IP: myList.GetIP()){
                 assertEquals("here", myList.GetName(IP),"The nickname was not changed");
             }
 
             // Update: the user stays in the list and keeps its nickname
             msgSender.sendBroadcastUpdate();
-            Thread.sleep(1000);
+            Thread.sleep(100);
             assertEquals(1, myList.GetIP().size(), "The update should not add or remove a user");
             for (String IP: myList.GetIP()){
                 assertEquals("here", myList.GetName(IP), "The update should not change the nickname");
@@ -75,7 +75,7 @@ public class ContactDiscoveryTest {
 
             // Disconnection: the user is removed from the list
             msgSender.sendBroadcastDeconnexion();
-            Thread.sleep(15000);
+            Thread.sleep(100);
             assertTrue(myList.GetIP().isEmpty(), "The list should be empty after the disconnection packet");
         }finally {
             if (msgSender!= null){
@@ -98,10 +98,10 @@ public class ContactDiscoveryTest {
         try{
             receiver.setDaemon(true);
             receiver.start();
-            Thread.sleep(1000);
+            Thread.sleep(1500);
             msgSender = new Sender(senderPort, socketPort, 256);
             msgSender.sendBroadcastConnexion();
-            Thread.sleep(1000);
+            Thread.sleep(1500);
 
             // Timestamp before SendUpdate starts
             assertEquals(1, myList.GetIP().size(), "Expected exactly one user after the connection packet");
@@ -110,9 +110,11 @@ public class ContactDiscoveryTest {
                 time1 = myList.GetTimestamp(IP);
             }
             sendUpdate = new SendUpdate(msgSender);
+            sendUpdate.setDaemon(true);
             sendUpdate.start();
-            Thread.sleep(2000);
+            Thread.sleep(1500);
             // Timestamp after at least one update has been sent
+            assertEquals(1, myList.GetIP().size(), "The user disappeared during the test");
             long time2 = 0;
             for (String IP: myList.GetIP()){
                 time2 = myList.GetTimestamp(IP);
@@ -138,20 +140,23 @@ public class ContactDiscoveryTest {
     void DisconnectionTest() throws SocketException, IOException, InterruptedException{
         UserList myList = new UserList();
         Receiver receiver = new Receiver(myList);
-        Sender msgSender = new Sender(senderPort, socketPort, 256);
+        Sender msgSender = null;
+        Disconnection disconnection = new Disconnection(myList);
         try{
             receiver.setDaemon(true);
             receiver.start();
-            Disconnection disconnection = new Disconnection(myList);
             disconnection.start();
+            msgSender = new Sender(senderPort, socketPort, 256);
             msgSender.sendBroadcastConnexion();
-
-            Thread.sleep(15000);
-            for (String IP: myList.GetIP()){
-                assertEquals("",myList.GetName(IP));
-            }
+            Thread.sleep(300);
+            assertEquals(1, myList.GetIP().size(), "The connection packet was not received");
+            Thread.sleep(12000);
+            assertTrue(myList.GetIP().isEmpty(), "The user is not disconnected");
         }finally {
-            msgSender.close();
+            disconnection.interrupt();
+            if (msgSender != null) {
+                msgSender.close();
+            }
             receiver.terminate();
         }
     }
@@ -181,9 +186,8 @@ public class ContactDiscoveryTest {
         // Timestamp update
         Thread.sleep(10);
         myList.UpdateTimestamp("10.10.40.245");
-        for (String IP: myList.GetIP()){
-            assertTrue(myList.GetTimestamp("10.10.40.245") > time, "The timestamp was not updated");
-        }
+        assertTrue(myList.GetTimestamp("10.10.40.245") > time, "The timestamp was not updated");
+
     }
 
 }
