@@ -13,7 +13,7 @@ public class ContactDiscoveryTest {
 
 
     @Test
-    void ReceiverTest(){
+    void ReceiverTest() throws SocketException{
         UserList myList = new UserList();
         Receiver receiver = new Receiver(myList);
         //receiver.addObserver(message -> System.out.println(message.content));
