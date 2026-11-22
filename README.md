@@ -10,6 +10,29 @@ The goal of this project is to create a chat application where users can find ea
 ## Projet is still under developing
 
 
+## How to compile and start the Chatsystem 
+
+
+### Broadcast address
+
+You might want to update the line 46 of sender.java with your own broadcast address. This address is by default 10.10.40.255
+
+
+### Compile the project
+
+Use : 
+xxxx
+
+
+### Start the ChatSystem
+
+Execute the test :
+xxx
+
+Execute the main :
+xxx
+
+
 ## Features
 
 ### 1. Peer Discovery
