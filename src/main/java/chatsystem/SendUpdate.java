@@ -7,11 +7,14 @@ public class SendUpdate extends Thread{
 
     @Override
     public void run(){
-        while(true){
+        while(!Thread.currentThread().isInterrupted()){
             try{
                 sleep(timeline);
                 sender.sendBroadcastUpdate();
-            }catch (Exception i) {
+            } catch (InterruptedException e){
+                break;
+            }  
+            catch (Exception i) {
                 System.out.println(i);
             }
 

@@ -13,7 +13,7 @@ public class Disconnection extends Thread {
 
     @Override
     public void run(){
-        while (true){
+        while (!Thread.currentThread().isInterrupted()){
             try{
             sleep(1000);
             for (String IP: activeList.GetIP()){
@@ -23,7 +23,7 @@ public class Disconnection extends Thread {
             }
         }
         catch (InterruptedException e ){
-            System.out.println(e);
+            break;
         }
     }
 }

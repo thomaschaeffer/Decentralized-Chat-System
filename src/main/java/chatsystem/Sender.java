@@ -45,4 +45,8 @@ public class Sender {
     public void sendBroadcastName(String name) throws IOException{
         sendUDP("", "change_name", name);
     }
+
+    public void close() {
+        socket.close();
+    }
 }

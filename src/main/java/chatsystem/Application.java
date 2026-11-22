@@ -6,9 +6,9 @@ import java.net.*;
 public class Application {
     private String username;
     public UserList myList;
-    private Thread receiver;
-    private Thread disconnection;
-    private Thread sendUpdate;
+    private Receiver receiver;
+    private Disconnection disconnection;
+    private SendUpdate sendUpdate;
     private Sender msgSender;
     private Terminal terminal;
 
@@ -70,6 +70,35 @@ public class Application {
         receiver.start();
         sendUpdate.start();
         disconnection.start();
-        terminal.start();
+
+        try {
+            terminal.start();
+        } finally {
+            shutdown();
+        }
     } 
+
+    public void shutdown(){
+        System.out.println("Shuttind everything down");
+        sendUpdate.interrupt();
+        disconnection.interrupt();
+        receiver.terminate();
+
+        try{
+            sendUpdate.join();
+            disconnection.join();
+            receiver.join();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+
+        try{
+            msgSender.sendBroadcastDeconnexion();
+        } catch (IOException e){
+            System.out.println("Failed to broadcast a disconnection flag");
+        }
+
+        msgSender.close();
+        System.out.println("Application stopped !");
+    }
 }   
