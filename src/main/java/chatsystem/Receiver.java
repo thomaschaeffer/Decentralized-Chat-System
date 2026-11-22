@@ -3,6 +3,8 @@ package chatsystem;
 import java.io.IOException;
 import java.net.*;
 
+import javax.management.RuntimeErrorException;
+
 
 public class Receiver extends Thread {
     private volatile boolean running = true;
@@ -25,6 +27,10 @@ public class Receiver extends Thread {
                 if (running){
                     handler(inPacket);
                 }
+            }
+        } catch (SocketException e){
+            if (running) {
+                throw new RuntimeException(e);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);

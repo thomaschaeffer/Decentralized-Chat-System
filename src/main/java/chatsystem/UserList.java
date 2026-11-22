@@ -1,5 +1,6 @@
 package chatsystem;
 
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.Set;
@@ -94,7 +95,7 @@ public class UserList {
      * @return  A set containing all user IP addresses
      */
     public Set<String> GetIP(){
-        return this.userlist.keySet();
+        return new HashSet<>(this.userlist.keySet());
     }
     
     /**
