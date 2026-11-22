@@ -7,7 +7,7 @@ Decentralzed Chat System is a peer-to-peer communication application developed i
 The goal of this project is to create a chat application where users can find each other and communicate over a local network without using a central server.
 
 
-## Projet is still under developing
+## Project is still under developing
 
 
 ## How to compile and start the Chatsystem 
