@@ -5,13 +5,19 @@ import java.io.IOException;
 import java.net.SocketException;
 
 import static org.junit.jupiter.api.Assertions.*;
-
+/**
+ * Tests for the contact discovery feature.
+ * They check that the Receiver, the Sender, SendUpdate, Disconnection and UserList
+ * Each test releases its sockets in a finally block, so the ports are free for the next test.
+ */
 public class ContactDiscoveryTest {
 
     private static final int senderPort = 4445;
     private static final int socketPort = 4444;
 
-
+    /**
+     * Checks that a Receiver can be started and stopped without error.
+     */
     @Test
     void ReceiverTest() throws SocketException{
         UserList myList = new UserList();
@@ -25,6 +31,10 @@ public class ContactDiscoveryTest {
         }
     }
 
+    /**
+     * Checks that the Sender correctly sends every kind of broadcast
+     * (connection, name change, update, disconnection).
+     */
     @Test
     void SenderTest() throws SocketException, IOException, InterruptedException {
         UserList myList = new UserList();
@@ -67,6 +77,9 @@ public class ContactDiscoveryTest {
         }
     }
 
+    /**
+     * Checks that SendUpdate periodically refreshes the timestamp of the user.
+     */
     @Test
     void SendUpdateTest() throws Exception{
         UserList myList = new UserList();
@@ -78,7 +91,7 @@ public class ContactDiscoveryTest {
             Thread.sleep(1000);
             msgSender = new Sender(senderPort, socketPort, 256);
             msgSender.sendBroadcastConnexion();
-
+            // Timestamp before SendUpdate starts
             long time1 = 0;
             for (String IP: myList.GetIP()){
                 time1 = myList.GetTimestamp(IP);
@@ -86,6 +99,7 @@ public class ContactDiscoveryTest {
             SendUpdate sendUpdate = new SendUpdate(msgSender);
             sendUpdate.start();
             Thread.sleep(2000);
+            // Timestamp after at least one update has been sent
             long time2 = 0;
             for (String IP: myList.GetIP()){
                 time2 = myList.GetTimestamp(IP);
@@ -101,6 +115,9 @@ public class ContactDiscoveryTest {
         }
     }
 
+    /**
+     * Checks that the Disconnection thread removes the users that stopped sending updates.
+     */
     @Test
     void DisconnectionTest() throws SocketException, IOException, InterruptedException{
         UserList myList = new UserList();
@@ -123,6 +140,9 @@ public class ContactDiscoveryTest {
         }
     }
 
+    /**
+     * Checks the UserList methods: add, remove, nickname modification and timestamp update.
+     */
     @Test
     void UserListTest(){
         UserList myList = new UserList();
