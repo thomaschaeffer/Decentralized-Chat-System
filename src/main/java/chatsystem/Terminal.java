@@ -5,12 +5,26 @@ import java.io.InputStreamReader;
 import java.io.IOException;
 import java.util.Arrays;
 
+/**
+ * Creates a terminal envorinment for the user to execute commands and control the program
+ * 
+ * The Terminal class is responsible for listening for user input and to execute functions accordingly
+ */
 public class Terminal {
+    
+    /**
+     * Creates a Terminal
+     * 
+     * @param app        reference to the Application object that manages the program
+     */
     private Application app;
     public Terminal(Application app) {
         this.app = app;
     } 
 
+    /**
+     * Internal function used to verify the number of arguments passed by the user for a given function
+     */
     private String checkArgs(int len, int expected, String cmd) {
         if (len != expected) {
             return "Error: "+cmd+" expects "+expected+" arguments, but "+len+" was given.";
@@ -18,11 +32,14 @@ public class Terminal {
         return "";
     } 
 
+    /**
+     * The main handler, executes the command entered in the terminal by the user 
+     * Uses a switch case for branching logic based on command name entered
+     * Executes callback functions defined in the Application class, as to hide implementation from this class. chatsystem.Terminal knows nothing outside chatsystem.Application
+     * Reacts to potential error messages received from call to app object
+     * (Is subject to future modification to become more generalised)
+     */
     private void executeCmd(String input) {
-        // Case switch on different commands with default fallback
-        // Maybe more advanced command handling with arguments and more generalised error handling!
-        // Store all possible commands with desc in dict? or other form?
-        // Executes app.function defined in chatsystem.Application class so that chatsystem.Terminal knows nothing outside chatsystem.Application
         String[] parts = input.split(" ");
         String command = parts[0]; 
         String[] args = Arrays.copyOfRange(parts, 1, parts.length);
@@ -31,8 +48,6 @@ public class Terminal {
 
         switch (command) {
             case "help":
-                // Function in this class listing all commands with descriptions?
-                // Maybe possible to do help cmd to have specific on cmd
                 System.out.println("(WIP) Here is all commands: ");
                 System.out.println("test_connection # Broadcasts a ping to simulate connection behaviour\ntest_update # Broadcasts a signal to simulate a periodic 'sign of life' signal\nchange_username\nlist_active\n");
                 System.out.println("Commands starting with 'test_' serves as manual tests for behaviour ment to be automatic in final implementation");
@@ -70,6 +85,10 @@ public class Terminal {
         } 
     }  
 
+    /**
+     * Starts the terminal loop
+     * Continously listens for input from the user and calls the handler to validate and execute the user input
+     */
     public void start() throws IOException {
         // chatsystem.Main while loop responding to user commands
         boolean running = true;
