@@ -24,7 +24,7 @@ public class Application {
      * @throws SocketException  if one of the sockets can't be created
      */
     public Application() throws SocketException {
-        username = "10.1.5.14";
+        username = "";
         myList = new UserList();
         receiver = new Receiver(myList);
         disconnection = new Disconnection(myList);
