@@ -16,42 +16,54 @@ public class ContactDiscoveryTest {
     void ReceiverTest() throws SocketException{
         UserList myList = new UserList();
         Receiver receiver = new Receiver(myList);
-        //receiver.addObserver(message -> System.out.println(message.content));
-        receiver.setDaemon(true);
-        receiver.start();
+        try{
+            receiver.setDaemon(true);
+            receiver.start();
+
+        } finally {
+            receiver.terminate();
+        }
     }
 
     @Test
     void SenderTest() throws SocketException, IOException, InterruptedException {
         UserList myList = new UserList();
         Receiver receiver = new Receiver(myList);
-        receiver.setDaemon(true);
-        receiver.start();
-        Thread.sleep(1000);
-        Sender msgSender = new Sender(senderPort, socketPort, 256);
+        Sender msgSender = null;
+        try{
+            receiver.setDaemon(true);
+            receiver.start();
+            Thread.sleep(1000);
+            msgSender = new Sender(senderPort, socketPort, 256);
 
-        msgSender.sendBroadcastConnexion();
-        Thread.sleep(1000);
+            msgSender.sendBroadcastConnexion();
+            Thread.sleep(1000);
 
-        for (String IP: myList.GetIP()){
-            assertEquals("10.1.5.14", myList.GetName(IP));
-        }
-        msgSender.sendBroadcastName("here");
+            for (String IP: myList.GetIP()){
+                assertEquals("10.1.5.14", myList.GetName(IP));
+            }
+            msgSender.sendBroadcastName("here");
 
-        Thread.sleep(1000);
-        for (String IP: myList.GetIP()){
-            assertEquals("here", myList.GetName(IP));
-        }
+            Thread.sleep(1000);
+            for (String IP: myList.GetIP()){
+                assertEquals("here", myList.GetName(IP));
+            }
 
-        msgSender.sendBroadcastUpdate();
-        Thread.sleep(1000);
-        for (String IP: myList.GetIP()){
-            assertEquals("here", myList.GetName(IP));
-        }
-        msgSender.sendBroadcastDeconnexion();
-        Thread.sleep(1000);
-        for (String IP: myList.GetIP()){
-            assertEquals("",myList.GetName(IP));
+            msgSender.sendBroadcastUpdate();
+            Thread.sleep(1000);
+            for (String IP: myList.GetIP()){
+                assertEquals("here", myList.GetName(IP));
+            }
+            msgSender.sendBroadcastDeconnexion();
+            Thread.sleep(1000);
+            for (String IP: myList.GetIP()){
+                assertEquals("",myList.GetName(IP));
+            }
+        }finally {
+            if (msgSender!= null){
+                msgSender.close();
+            }
+            receiver.terminate();
         }
     }
 
@@ -59,25 +71,33 @@ public class ContactDiscoveryTest {
     void SendUpdateTest() throws Exception{
         UserList myList = new UserList();
         Receiver receiver = new Receiver(myList);
-        receiver.setDaemon(true);
-        receiver.start();
-        Thread.sleep(1000);
-        Sender msgSender = new Sender(senderPort, socketPort, 256);
-        msgSender.sendBroadcastConnexion();
+        Sender msgSender = null;
+        try{
+            receiver.setDaemon(true);
+            receiver.start();
+            Thread.sleep(1000);
+            msgSender = new Sender(senderPort, socketPort, 256);
+            msgSender.sendBroadcastConnexion();
 
-        long time1 = 0;
-        for (String IP: myList.GetIP()){
-            time1 = myList.GetTimestamp(IP);
-        }
-        SendUpdate sendUpdate = new SendUpdate(msgSender);
-        sendUpdate.start();
-        Thread.sleep(2000);
-        long time2 = 0;
-        for (String IP: myList.GetIP()){
-            time2 = myList.GetTimestamp(IP);
-        }
-        for (String IP: myList.GetIP()){
-            assertTrue(time2 > time1, "Le timestamp a été mis à jour");
+            long time1 = 0;
+            for (String IP: myList.GetIP()){
+                time1 = myList.GetTimestamp(IP);
+            }
+            SendUpdate sendUpdate = new SendUpdate(msgSender);
+            sendUpdate.start();
+            Thread.sleep(2000);
+            long time2 = 0;
+            for (String IP: myList.GetIP()){
+                time2 = myList.GetTimestamp(IP);
+            }
+            for (String IP: myList.GetIP()){
+                assertTrue(time2 > time1, "Le timestamp a été mis à jour");
+            }
+        }finally {
+            if (msgSender!= null){
+                msgSender.close();
+            }
+            receiver.terminate();
         }
     }
 
@@ -85,16 +105,21 @@ public class ContactDiscoveryTest {
     void DisconnectionTest() throws SocketException, IOException, InterruptedException{
         UserList myList = new UserList();
         Receiver receiver = new Receiver(myList);
-        receiver.setDaemon(true);
-        receiver.start();
-        Disconnection disconnection = new Disconnection(myList);
-        disconnection.start();
         Sender msgSender = new Sender(senderPort, socketPort, 256);
-        msgSender.sendBroadcastConnexion();
+        try{
+            receiver.setDaemon(true);
+            receiver.start();
+            Disconnection disconnection = new Disconnection(myList);
+            disconnection.start();
+            msgSender.sendBroadcastConnexion();
 
-        Thread.sleep(2000);
-        for (String IP: myList.GetIP()){
-            assertEquals("",myList.GetName(IP));
+            Thread.sleep(2000);
+            for (String IP: myList.GetIP()){
+                assertEquals("",myList.GetName(IP));
+            }
+        }finally {
+            msgSender.close();
+            receiver.terminate();
         }
     }
 
