@@ -20,18 +20,23 @@ You might want to update the line 46 of sender.java with your own broadcast addr
 
 ### Compile the project
 
-Use : 
-xxxx
-
+```bash
+mvn clean compile
+```
 
 ### Start the ChatSystem
 
-Execute the test :
-xxx
+Execute the tests:
 
-Execute the main :
-xxx
+```bash
+mvn test
+```
 
+Execute the main:
+
+```bash
+mvn exec:java
+```
 
 ## Features
 
