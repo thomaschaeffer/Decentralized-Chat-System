@@ -15,7 +15,7 @@ The goal of this project is to create a chat application where users can find ea
 
 ### Broadcast address
 
-You might want to update the line 46 of sender.java with your own broadcast address. This address is by default 10.10.40.255
+You might want to update the line 46 of sender.java with your own broadcast address. This address is by default 127.255.255.255
 
 
 ### Compile the project
