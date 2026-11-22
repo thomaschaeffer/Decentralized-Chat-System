@@ -26,6 +26,7 @@ public class Sender {
     public Sender(int senderPort, int socketPort, int buffLen) throws SocketException {
         this.senderPort = senderPort;
         this.socket = new DatagramSocket(socketPort);
+        this.socket.setBroadcast(true);
         this.buff = new byte[buffLen];
     }
 
