@@ -99,7 +99,6 @@ public class Terminal {
             String command = reader.readLine();
 
             if (command.equals("exit")) {
-                System.out.println("Bye!");
                 running = false;
                 break;                
             } 

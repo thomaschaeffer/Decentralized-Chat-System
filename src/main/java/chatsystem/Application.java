@@ -126,7 +126,7 @@ public class Application {
      * and close the UDP sender.
      */
     public void shutdown(){
-        System.out.println("Shuttind everything down");
+        System.out.println("Shutting everything down");
         sendUpdate.interrupt();
         disconnection.interrupt();
         receiver.terminate();

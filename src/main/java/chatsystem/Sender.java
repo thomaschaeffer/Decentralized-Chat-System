@@ -42,7 +42,7 @@ public class Sender {
         InetAddress adrDest;
         //Use the broadcast address by default
         if (strAdrDest.isEmpty()) {
-            adrDest = InetAddress.getByName("10.1.255.255");
+            adrDest = InetAddress.getByName("127.255.255.255");
         } else {
             adrDest = InetAddress.getByName(strAdrDest);
         }

@@ -41,9 +41,9 @@ public class Receiver extends Thread {
 
             while (running) {
                 DatagramPacket inPacket  = new DatagramPacket(buf, buf.length);
-                socket.receive(inPacket);       
+                socket.receive(inPacket); 
                 if (running){
-                    handler(inPacket);
+                     handler(inPacket);
                 }
             }
         } catch (SocketException e){
@@ -61,7 +61,6 @@ public class Receiver extends Thread {
      * Retrieves the content of the package and executes different functions depending on the received flag
      */
     private void handler(DatagramPacket received) {
-        System.out.println("handling a received package");
         String[] data = (new String(received.getData(), 0, received.getLength())).split(",",2);
         if (data.length < 2 ) {
             return;
@@ -72,11 +71,10 @@ public class Receiver extends Thread {
 
         switch(flag) {
             case "update":
-                System.out.println("update");
                 if ( this.activeList.IsKnow(address)){
                     this.activeList.UpdateTimestamp(address);
                 } else {
-                    this.activeList.Add(address,"",System.currentTimeMillis());
+                    this.activeList.Add(address,address,System.currentTimeMillis());
                 }
                 break;
             case "connection":
@@ -84,7 +82,7 @@ public class Receiver extends Thread {
                 if ( this.activeList.IsKnow(address)){
                     this.activeList.UpdateTimestamp(address);
                 } else {
-                    this.activeList.Add(address,"",System.currentTimeMillis());
+                    this.activeList.Add(address,address,System.currentTimeMillis());
                 }                
                 break;
             case "deconnection":
