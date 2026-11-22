@@ -68,6 +68,7 @@ public class Application {
         // Here goes everything automatic before terminal is launched and takes execution flow
 
         receiver.start();
+        msgSender.sendBroadcastConnexion();
         sendUpdate.start();
         disconnection.start();
 
