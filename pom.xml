@@ -33,6 +33,14 @@
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <version>3.1.2</version>
             </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.5.0</version>
+                <configuration>
+                    <mainClass>chatsystem.Main</mainClass>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 

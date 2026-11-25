@@ -7,8 +7,36 @@ Decentralzed Chat System is a peer-to-peer communication application developed i
 The goal of this project is to create a chat application where users can find each other and communicate over a local network without using a central server.
 
 
-## Projet is still under developing
+## Project is still under developing
 
+
+## How to compile and start the Chatsystem 
+
+
+### Broadcast address
+
+You might want to update the line 46 of sender.java with your own broadcast address. This address is by default 127.255.255.255
+
+
+### Compile the project
+
+```bash
+mvn clean compile
+```
+
+### Start the ChatSystem
+
+Execute the tests:
+
+```bash
+mvn test
+```
+
+Execute the main:
+
+```bash
+mvn exec:java
+```
 
 ## Features
 

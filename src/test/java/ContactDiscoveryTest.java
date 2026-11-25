@@ -19,16 +19,18 @@ public class ContactDiscoveryTest {
      * Checks that a Receiver can be started and stopped without error.
      */
     @Test
-    void ReceiverTest() throws SocketException{
+    void ReceiverTest() throws SocketException, InterruptedException {
         UserList myList = new UserList();
         Receiver receiver = new Receiver(myList);
         try{
             receiver.setDaemon(true);
             receiver.start();
-
+            assertTrue(receiver.isAlive(), "The Receiver thread should be running after start()");
         } finally {
             receiver.terminate();
         }
+        receiver.join(100);
+        assertFalse(receiver.isAlive(), "The Receiver thread should stop after terminate()");
     }
 
     /**
@@ -43,32 +45,38 @@ public class ContactDiscoveryTest {
         try{
             receiver.setDaemon(true);
             receiver.start();
-            Thread.sleep(1000);
+            Thread.sleep(100);
             msgSender = new Sender(senderPort, socketPort, 256);
 
+            // Connection: the user is added, its nickname is its IP by default
             msgSender.sendBroadcastConnexion();
-            Thread.sleep(1000);
-
+            Thread.sleep(100);
+            assertEquals(1, myList.GetIP().size(), "Expected exactly one user after the connection packet");
             for (String IP: myList.GetIP()){
-                assertEquals("10.1.5.14", myList.GetName(IP));
+                assertEquals(IP, myList.GetName(IP), "The default nickname should be the IP address");
+
             }
+
+            // Name change: the nickname is modified
             msgSender.sendBroadcastName("here");
-
-            Thread.sleep(1000);
+            Thread.sleep(100);
+            assertEquals(1, myList.GetIP().size(), "The name change should not add a new user");
             for (String IP: myList.GetIP()){
-                assertEquals("here", myList.GetName(IP));
+                assertEquals("here", myList.GetName(IP),"The nickname was not changed");
             }
 
+            // Update: the user stays in the list and keeps its nickname
             msgSender.sendBroadcastUpdate();
-            Thread.sleep(1000);
+            Thread.sleep(100);
+            assertEquals(1, myList.GetIP().size(), "The update should not add or remove a user");
             for (String IP: myList.GetIP()){
-                assertEquals("here", myList.GetName(IP));
+                assertEquals("here", myList.GetName(IP), "The update should not change the nickname");
             }
+
+            // Disconnection: the user is removed from the list
             msgSender.sendBroadcastDeconnexion();
-            Thread.sleep(1000);
-            for (String IP: myList.GetIP()){
-                assertEquals("",myList.GetName(IP));
-            }
+            Thread.sleep(100);
+            assertTrue(myList.GetIP().isEmpty(), "The list should be empty after the disconnection packet");
         }finally {
             if (msgSender!= null){
                 msgSender.close();
@@ -85,29 +93,39 @@ public class ContactDiscoveryTest {
         UserList myList = new UserList();
         Receiver receiver = new Receiver(myList);
         Sender msgSender = null;
+        SendUpdate sendUpdate = null;
+
         try{
             receiver.setDaemon(true);
             receiver.start();
-            Thread.sleep(1000);
+            Thread.sleep(1500);
             msgSender = new Sender(senderPort, socketPort, 256);
             msgSender.sendBroadcastConnexion();
+            Thread.sleep(1500);
+
             // Timestamp before SendUpdate starts
+            assertEquals(1, myList.GetIP().size(), "Expected exactly one user after the connection packet");
             long time1 = 0;
             for (String IP: myList.GetIP()){
                 time1 = myList.GetTimestamp(IP);
             }
-            SendUpdate sendUpdate = new SendUpdate(msgSender);
+            sendUpdate = new SendUpdate(msgSender);
+            sendUpdate.setDaemon(true);
             sendUpdate.start();
-            Thread.sleep(2000);
+            Thread.sleep(1500);
             // Timestamp after at least one update has been sent
+            assertEquals(1, myList.GetIP().size(), "The user disappeared during the test");
             long time2 = 0;
             for (String IP: myList.GetIP()){
                 time2 = myList.GetTimestamp(IP);
             }
             for (String IP: myList.GetIP()){
-                assertTrue(time2 > time1, "Le timestamp a été mis à jour");
+                assertTrue(time2 > time1, "The timestamp was not refreshed by SendUpdate");
             }
         }finally {
+            if (sendUpdate != null) {
+                sendUpdate.interrupt();
+            }
             if (msgSender!= null){
                 msgSender.close();
             }
@@ -122,20 +140,23 @@ public class ContactDiscoveryTest {
     void DisconnectionTest() throws SocketException, IOException, InterruptedException{
         UserList myList = new UserList();
         Receiver receiver = new Receiver(myList);
-        Sender msgSender = new Sender(senderPort, socketPort, 256);
+        Sender msgSender = null;
+        Disconnection disconnection = new Disconnection(myList);
         try{
             receiver.setDaemon(true);
             receiver.start();
-            Disconnection disconnection = new Disconnection(myList);
             disconnection.start();
+            msgSender = new Sender(senderPort, socketPort, 256);
             msgSender.sendBroadcastConnexion();
-
-            Thread.sleep(2000);
-            for (String IP: myList.GetIP()){
-                assertEquals("",myList.GetName(IP));
-            }
+            Thread.sleep(300);
+            assertEquals(1, myList.GetIP().size(), "The connection packet was not received");
+            Thread.sleep(12000);
+            assertTrue(myList.GetIP().isEmpty(), "The user is not disconnected");
         }finally {
-            msgSender.close();
+            disconnection.interrupt();
+            if (msgSender != null) {
+                msgSender.close();
+            }
             receiver.terminate();
         }
     }
@@ -144,33 +165,29 @@ public class ContactDiscoveryTest {
      * Checks the UserList methods: add, remove, nickname modification and timestamp update.
      */
     @Test
-    void UserListTest(){
+    void UserListTest() throws InterruptedException{
         UserList myList = new UserList();
         long time = System.currentTimeMillis();
 
-        myList.Add("10.29.153.93","toto",time);
-        for (String IP: myList.GetIP()){
-            assertEquals("10.29.153.93",IP);
-        }
-        for (String IP: myList.GetIP()){
-            assertEquals("toto",myList.GetName(IP));
-        }
+        // Add
+        myList.Add("10.10.40.245","toto",time);
+        assertEquals(1, myList.GetIP().size(), "The user was not added");
+        assertTrue(myList.IsKnow("10.10.40.245"), "The user should be known after Add");
 
-        myList.Remove("10.29.153.93");
-        for (String IP: myList.GetIP()){
-            assertEquals("",myList.GetName(IP));
-        }
+        // Remove
+        myList.Remove("10.10.40.245");
+        assertTrue(myList.GetIP().isEmpty(), "The list should be empty after Remove");
 
-        myList.Add("10.29.153.93","Armand",time);
-        myList.ModifyNickName("10.29.153.93","Thomas");
-        for (String IP: myList.GetIP()){
-            assertEquals("Thomas",myList.GetName(IP));
-        }
+        // Nickname modification
+        myList.Add("10.10.40.245","Armand",time);
+        myList.ModifyNickName("10.10.40.245","Thomas");
+        assertEquals("Thomas", myList.GetName("10.10.40.245"), "The nickname was not modified");
 
-        myList.UpdateTimestamp("10.29.153.93");
-        for (String IP: myList.GetIP()){
-            assertTrue(myList.GetTimestamp("10.29.153.93") > time, "Le timestamp a été mis à jour");
-        }
+        // Timestamp update
+        Thread.sleep(10);
+        myList.UpdateTimestamp("10.10.40.245");
+        assertTrue(myList.GetTimestamp("10.10.40.245") > time, "The timestamp was not updated");
+
     }
 
 }
